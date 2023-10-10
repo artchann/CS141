@@ -168,7 +168,7 @@ public class hw1{
 			}
 		}
 		
-		class Picture_{
+		class Picture{
 			class ListNode{
 				private ListNode nextNode = null;
 				private Shape currentShape = null;
@@ -179,13 +179,12 @@ public class hw1{
 				
 				void setNext(Shape sh){
 					ListNode nextNode = new ListNode();
-					nextNode.currentShape = sh;
+					nextNode.setCurrent(sh);
 					this.nextNode = nextNode;
 				}
 				void setCurrent(Shape sh) {
 					this.currentShape = sh;
 				}
-				
 				ListNode getNext() {
 					return nextNode;
 				}
@@ -194,9 +193,10 @@ public class hw1{
 				}
 				
 			}
-			ListNode head = null; 
-			public Picture_() {
-				
+			
+			ListNode head; 
+			public Picture () {
+				this.head = null;
 			}
 			void add(Shape sh) {
 				if(head == null) {
@@ -206,20 +206,53 @@ public class hw1{
 				
 				else {
 					ListNode iterator = head;
-					while(iterator.nextNode != null) {
-						
+					while(iterator.getNext() != null) {
+						iterator = iterator.getNext();
 					}
+					iterator.setNext(sh);
 				}
+			}
+			void printAll() {
+				ListNode iterator = head;
+				while(iterator != null) {
+					iterator.getCurrent().print();
+					iterator = iterator.getNext();
+				}
+			}
+			
+			void drawAll() {
+				ListNode iterator = head;
+				while(iterator != null) {
+					iterator.getCurrent().draw();
+					iterator = iterator.getNext();
+				}
+			}
+			double totalArea() {
+				ListNode iterator = head;
+				double sum = 0;
+				while(iterator != null) {
+					sum += iterator.getCurrent().area();
+					iterator = iterator.getNext();
+				}
+				return sum; 
 			}
 		}
 		
-//		Rectangle a = new Rectangle("First Rectangle",5,4);
+		Rectangle a = new Rectangle("First Rectangle",5,4);
 ////		a.setLength(4);
 ////		a.setWidth(5);
 //		a.print();
 //		a.draw();
 //		
-//		Square k = new Square("First Square",5);
+		Square k = new Square("First Square",5);
+		
+		Picture tester = new Picture();
+		tester.add(a);
+		tester.add(k);
+		tester.printAll();
+		tester.drawAll();
+		System.out.println(tester.totalArea());
+		
 ////		k.setLength(5);
 //		k.print();
 //		k.draw();
