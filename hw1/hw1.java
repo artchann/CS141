@@ -17,8 +17,10 @@ public class hw1{
 		class Triangle extends Shape{
 			private int base;
 			private int height;
-			public Triangle(String name) {
+			public Triangle(String name, int base, int height) {
 				super(name);
+				this.base = base;
+				this.height = height;
 			}
 			
 			//tester functions
@@ -53,8 +55,9 @@ public class hw1{
 		}
 		class Circle extends Shape{
 			int radius;
-			Circle(String name){
+			Circle(String name, int radius ){
 				super(name);
+				this.radius = radius;
 			}
 			//tester functions
 			void setRadius(int r) {
@@ -88,8 +91,9 @@ public class hw1{
 		
 		class Square extends Shape {
 			int length;
-			public Square (String name) {
+			public Square (String name, int length) {
 				super(name);
+				this.length = length;
 			}
 			
 			//testerfunc
@@ -121,8 +125,9 @@ public class hw1{
 		class Rectangle extends Square {
 			int width; 
 			
-			public Rectangle(String name) {
-				super(name);
+			public Rectangle(String name, int length, int width) {
+				super(name, length);
+				this.width = width;
 			}
 			
 			//tester
@@ -149,36 +154,36 @@ public class hw1{
 			}
 		}
 		
-		Rectangle a = new Rectangle("First Rectangle");
-		a.setLength(4);
-		a.setWidth(5);
+		Rectangle a = new Rectangle("First Rectangle",5,4);
+//		a.setLength(4);
+//		a.setWidth(5);
 		a.print();
 		a.draw();
 		
-//		Square k = new Square("First Square ");
+		Square k = new Square("First Square",5);
 //		k.setLength(5);
-//		k.print();
-//		k.draw();
+		k.print();
+		k.draw();
 		
-//		Circle x = new Circle ("First Circle");
+		Circle x = new Circle ("First Circle",5);
 //		x.setRadius(5);
-//		x.print();
-//		x.draw();
+		x.print();
+		x.draw();
 //		
-//		Circle y = new Circle ("Second Circle");
+		Circle y = new Circle ("Second Circle",4);
 //		y.setRadius(4);
-//		y.print();
+		y.print();
 //		
-//		Triangle i = new Triangle("First triangle");
+		Triangle i = new Triangle("First triangle", 5,5);
 //		i.setBase(5);
 //		i.setHeight(5);
-//		i.print();
-//		i.draw();
-//		Triangle j = new Triangle("Second triangle");
+		i.print();
+		i.draw();
+		Triangle j = new Triangle("Second triangle",4,4);
 //		j.setBase(4);
 //		j.setHeight(4);
-//		j.print();
-//		j.draw();
+		j.print();
+		j.draw();
 		
 		
 	}
