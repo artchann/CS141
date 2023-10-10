@@ -4,9 +4,12 @@ package hw.hw1;
 public class hw1{
 	public static void main(String[] args) {
 		abstract class Shape{
-			String name;
+			private String name;
 			public Shape(String name){
 				this.name = name;
+			}
+			String getName() {
+				return name;
 			}
 			abstract void print();
 			abstract void draw(); 
@@ -32,6 +35,13 @@ public class hw1{
 			}
 			//
 			
+			int getHeight() {
+				return height;
+			}
+			int getBase() {
+				return base;
+			}
+			
 			@Override
 			double area() {
 				double x = Double.valueOf(base);
@@ -41,7 +51,7 @@ public class hw1{
 			
 			@Override
 			void print() {
-				System.out.println(name + "(" + base + ", " + height + ") : " + area() );
+				System.out.println(getName() + "(" + base + ", " + height + ") : " + area() );
 			}
 			
 			@Override
@@ -54,7 +64,7 @@ public class hw1{
 			
 		}
 		class Circle extends Shape{
-			int radius;
+			private int radius;
 			Circle(String name, int radius ){
 				super(name);
 				this.radius = radius;
@@ -74,7 +84,7 @@ public class hw1{
 			
 			@Override
 			void print() {
-				System.out.println(name + "(" + radius + ") : " + area());
+				System.out.println(getName() + "(" + radius + ") : " + area());
 			}
 			
 			@Override
@@ -90,7 +100,7 @@ public class hw1{
 		}
 		
 		class Square extends Shape {
-			int length;
+			private int length;
 			public Square (String name, int length) {
 				super(name);
 				this.length = length;
@@ -102,9 +112,13 @@ public class hw1{
 			}
 			//
 			
+			int getLength() {
+				return length;
+			}
+			
 			@Override
 			void print() {
-				System.out.println(name + "(" + length + ") : " + area());
+				System.out.println(getName() + "(" + length + ") : " + area());
 			}
 			@Override
 			void draw() {
@@ -123,7 +137,7 @@ public class hw1{
 		}
 		
 		class Rectangle extends Square {
-			int width; 
+			private int width; 
 			
 			public Rectangle(String name, int length, int width) {
 				super(name, length);
@@ -138,7 +152,7 @@ public class hw1{
 			
 			@Override
 			void print() {
-				System.out.println(name + "(" + length + ", " +  width + ") : "  + area());
+				System.out.println(getName() + "(" + getLength() + ", " +  width + ") : "  + area());
 			}
 			@Override
 			void draw() {
@@ -150,7 +164,7 @@ public class hw1{
 			}
 			@Override
 			double area() {
-				return Double.valueOf(width)*Double.valueOf(length);
+				return Double.valueOf(width)*Double.valueOf(getLength());
 			}
 		}
 		
