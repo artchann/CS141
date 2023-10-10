@@ -52,16 +52,62 @@ public class hw1{
 			}
 			
 		}
-		Triangle x = new Triangle("First triangle");
-		x.setBase(5);
-		x.setHeight(5);
+		class Circle extends Shape{
+			int radius;
+			Circle(String name){
+				super(name);
+			}
+			//tester functions
+			void setRadius(int r) {
+				this.radius = r;
+			}
+			//
+			
+			@Override
+			double area() {
+				double x = Double.valueOf(radius);
+				x = Math.PI*x*x;
+				return x  = Math.round(x*100.0)/100.0;
+			}
+			
+			@Override
+			void print() {
+				System.out.println(name + "(" + radius + ") : " + area());
+			}
+			
+			@Override
+			void draw() {
+				System.out.println("    ***   ");
+				System.out.println("  *     *  ");
+				System.out.println(" *       * ");
+				System.out.println(" *       * ");
+				System.out.println("  *     *  ");
+				System.out.println("    ***   ");
+			}
+			
+		}
+		
+		Circle x = new Circle ("First Circle");
+		x.setRadius(5);
 		x.print();
 		x.draw();
-		Triangle y = new Triangle("Second triangle");
-		y.setBase(4);
-		y.setHeight(4);
+		
+		Circle y = new Circle ("Second Circle");
+		y.setRadius(4);
 		y.print();
-		y.draw();
+		
+//		Triangle x = new Triangle("First triangle");
+//		x.setBase(5);
+//		x.setHeight(5);
+//		x.print();
+//		x.draw();
+//		Triangle y = new Triangle("Second triangle");
+//		y.setBase(4);
+//		y.setHeight(4);
+//		y.print();
+//		y.draw();
+		
+		
 	}
 }
 
