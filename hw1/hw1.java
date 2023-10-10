@@ -238,20 +238,20 @@ public class hw1{
 			}
 		}
 		
-		Rectangle a = new Rectangle("First Rectangle",5,4);
-////		a.setLength(4);
-////		a.setWidth(5);
+//		Rectangle a = new Rectangle("First Rectangle",5,4);
+//		a.setLength(4);
+//		a.setWidth(5);
 //		a.print();
 //		a.draw();
 //		
-		Square k = new Square("First Square",5);
+//		Square k = new Square("First Square",5);
 		
-		Picture tester = new Picture();
-		tester.add(a);
-		tester.add(k);
-		tester.printAll();
-		tester.drawAll();
-		System.out.println(tester.totalArea());
+//		Picture tester = new Picture();
+//		tester.add(a);
+//		tester.add(k);
+//		tester.printAll();
+//		tester.drawAll();
+//		System.out.println(tester.totalArea());
 		
 ////		k.setLength(5);
 //		k.print();
@@ -276,6 +276,11 @@ public class hw1{
 ////		j.setHeight(4);
 //		j.print();
 //		j.draw();
+		
+		int x = Integer.valueOf(args[0]);
+		System.out.println(x);
+		int y = Integer.valueOf(args[1]);
+		System.out.println(y);
 		
 		
 	}
