@@ -117,10 +117,48 @@ public class hw1{
 			}
 			
 		}
-		Square k = new Square("First Square ");
-		k.setLength(5);
-		k.print();
-		k.draw();
+		
+		class Rectangle extends Square {
+			int width; 
+			
+			public Rectangle(String name) {
+				super(name);
+			}
+			
+			//tester
+			void setWidth(int width){
+				this.width= width;
+			}
+			//
+			
+			@Override
+			void print() {
+				System.out.println(name + "(" + length + ", " +  width + ") : "  + area());
+			}
+			@Override
+			void draw() {
+				System.out.println("***");
+				System.out.println("* *");
+				System.out.println("* *");
+				System.out.println("* *");
+				System.out.println("***");
+			}
+			@Override
+			double area() {
+				return Double.valueOf(width)*Double.valueOf(length);
+			}
+		}
+		
+		Rectangle a = new Rectangle("First Rectangle");
+		a.setLength(4);
+		a.setWidth(5);
+		a.print();
+		a.draw();
+		
+//		Square k = new Square("First Square ");
+//		k.setLength(5);
+//		k.print();
+//		k.draw();
 		
 //		Circle x = new Circle ("First Circle");
 //		x.setRadius(5);
