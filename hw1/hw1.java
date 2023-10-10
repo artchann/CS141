@@ -86,34 +86,61 @@ public class hw1{
 			
 		}
 		
-//		class Square extends Shape {
-//			int length;
-//			public Square (String name) {
-//				super(name);
-//			}
-//			
-//			
-//		}
+		class Square extends Shape {
+			int length;
+			public Square (String name) {
+				super(name);
+			}
+			
+			//testerfunc
+			void setLength(int x) {
+				this.length = x;
+			}
+			//
+			
+			@Override
+			void print() {
+				System.out.println(name + "(" + length + ") : " + area());
+			}
+			@Override
+			void draw() {
+				System.out.println("******");
+				System.out.println("*    *");
+				System.out.println("*    *");
+				System.out.println("******");
+				
+			}
+			@Override
+			double area() {
+				double x = Double.valueOf(length);
+				return x*x ;
+			}
+			
+		}
+		Square k = new Square("First Square ");
+		k.setLength(5);
+		k.print();
+		k.draw();
 		
-		Circle x = new Circle ("First Circle");
-		x.setRadius(5);
-		x.print();
-		x.draw();
-		
-		Circle y = new Circle ("Second Circle");
-		y.setRadius(4);
-		y.print();
-		
-		Triangle i = new Triangle("First triangle");
-		i.setBase(5);
-		i.setHeight(5);
-		i.print();
-		i.draw();
-		Triangle j = new Triangle("Second triangle");
-		j.setBase(4);
-		j.setHeight(4);
-		j.print();
-		j.draw();
+//		Circle x = new Circle ("First Circle");
+//		x.setRadius(5);
+//		x.print();
+//		x.draw();
+//		
+//		Circle y = new Circle ("Second Circle");
+//		y.setRadius(4);
+//		y.print();
+//		
+//		Triangle i = new Triangle("First triangle");
+//		i.setBase(5);
+//		i.setHeight(5);
+//		i.print();
+//		i.draw();
+//		Triangle j = new Triangle("Second triangle");
+//		j.setBase(4);
+//		j.setHeight(4);
+//		j.print();
+//		j.draw();
 		
 		
 	}
