@@ -154,36 +154,81 @@ public class hw1{
 			}
 		}
 		
-		Rectangle a = new Rectangle("First Rectangle",5,4);
-//		a.setLength(4);
-//		a.setWidth(5);
-		a.print();
-		a.draw();
+		class Picture_{
+			class ListNode{
+				private ListNode nextNode = null;
+				private Shape currentShape = null;
+				
+				public ListNode() {
+					
+				}
+				
+				void setNext(Shape sh){
+					ListNode nextNode = new ListNode();
+					nextNode.currentShape = sh;
+					this.nextNode = nextNode;
+				}
+				void setCurrent(Shape sh) {
+					this.currentShape = sh;
+				}
+				
+				ListNode getNext() {
+					return nextNode;
+				}
+				Shape getCurrent() {
+					return currentShape;
+				}
+				
+			}
+			ListNode head = null; 
+			public Picture_() {
+				
+			}
+			void add(Shape sh) {
+				if(head == null) {
+					head = new ListNode();
+					head.setCurrent(sh);
+				}
+				
+				else {
+					ListNode iterator = head;
+					while(iterator.nextNode != null) {
+						
+					}
+				}
+			}
+		}
 		
-		Square k = new Square("First Square",5);
-//		k.setLength(5);
-		k.print();
-		k.draw();
-		
-		Circle x = new Circle ("First Circle",5);
-//		x.setRadius(5);
-		x.print();
-		x.draw();
+//		Rectangle a = new Rectangle("First Rectangle",5,4);
+////		a.setLength(4);
+////		a.setWidth(5);
+//		a.print();
+//		a.draw();
 //		
-		Circle y = new Circle ("Second Circle",4);
-//		y.setRadius(4);
-		y.print();
+//		Square k = new Square("First Square",5);
+////		k.setLength(5);
+//		k.print();
+//		k.draw();
 //		
-		Triangle i = new Triangle("First triangle", 5,5);
-//		i.setBase(5);
-//		i.setHeight(5);
-		i.print();
-		i.draw();
-		Triangle j = new Triangle("Second triangle",4,4);
-//		j.setBase(4);
-//		j.setHeight(4);
-		j.print();
-		j.draw();
+//		Circle x = new Circle ("First Circle",5);
+////		x.setRadius(5);
+//		x.print();
+//		x.draw();
+////		
+//		Circle y = new Circle ("Second Circle",4);
+////		y.setRadius(4);
+//		y.print();
+////		
+//		Triangle i = new Triangle("First triangle", 5,5);
+////		i.setBase(5);
+////		i.setHeight(5);
+//		i.print();
+//		i.draw();
+//		Triangle j = new Triangle("Second triangle",4,4);
+////		j.setBase(4);
+////		j.setHeight(4);
+//		j.print();
+//		j.draw();
 		
 		
 	}
