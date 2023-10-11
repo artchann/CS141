@@ -319,7 +319,7 @@ public class hw1{
 		list.add(adder);
 		
 		list.printAll();
-//		list.drawAll();
+		list.drawAll();
 		System.out.println(list.totalArea());
 	}
 }
