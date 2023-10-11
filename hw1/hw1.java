@@ -278,11 +278,10 @@ public class hw1{
 //		j.draw();
 		
 		int x = Integer.valueOf(args[0]);
-		System.out.println(x);
 		int y = Integer.valueOf(args[1]);
+		System.out.println(x);
 		System.out.println(y);
-		
-		
+			
 	}
 }
 
