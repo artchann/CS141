@@ -238,50 +238,40 @@ public class hw1{
 			}
 		}
 		
-//		Rectangle a = new Rectangle("First Rectangle",5,4);
-//		a.setLength(4);
-//		a.setWidth(5);
-//		a.print();
-//		a.draw();
-//		
-//		Square k = new Square("First Square",5);
-		
-//		Picture tester = new Picture();
-//		tester.add(a);
-//		tester.add(k);
-//		tester.printAll();
-//		tester.drawAll();
-//		System.out.println(tester.totalArea());
-		
-////		k.setLength(5);
-//		k.print();
-//		k.draw();
-//		
-//		Circle x = new Circle ("First Circle",5);
-////		x.setRadius(5);
-//		x.print();
-//		x.draw();
-////		
-//		Circle y = new Circle ("Second Circle",4);
-////		y.setRadius(4);
-//		y.print();
-////		
-//		Triangle i = new Triangle("First triangle", 5,5);
-////		i.setBase(5);
-////		i.setHeight(5);
-//		i.print();
-//		i.draw();
-//		Triangle j = new Triangle("Second triangle",4,4);
-////		j.setBase(4);
-////		j.setHeight(4);
-//		j.print();
-//		j.draw();
-		
 		int x = Integer.valueOf(args[0]);
 		int y = Integer.valueOf(args[1]);
 		System.out.println(x);
 		System.out.println(y);
-			
+		
+		Picture list = new Picture();
+		
+		Shape adder = new Triangle("FirstTriangle", x,y);
+		list.add(adder);
+		
+		adder = new Triangle("SecondTriangle", x-1,y-1);
+		list.add(adder);
+		
+		adder = new Circle("FirstCircle", x);
+		list.add(adder);
+		
+		adder = new Circle("SecondCircle", x-1);
+		list.add(adder);
+		
+		adder = new Square("FirstSquare", x);
+		list.add(adder);
+		
+		adder = new Square("SecondSquare",x-1);
+		list.add(adder);
+		
+		adder = new Rectangle("FirstRectangle", x,y);
+		list.add(adder);
+		
+		adder = new Rectangle("SecondRectangle", x-1,y-1);
+		list.add(adder);
+		
+		list.printAll();
+//		list.drawAll();
+		System.out.println(list.totalArea());
 	}
 }
 
