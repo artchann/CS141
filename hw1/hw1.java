@@ -14,6 +14,7 @@ public class hw1{
 			abstract void print();
 			abstract void draw(); 
 			abstract double area();
+			abstract boolean noneEdge();
 				
 			
 		}
@@ -35,6 +36,16 @@ public class hw1{
 			}
 			//
 			
+			boolean noneEdge() {
+				if (base <= 0) {
+					return true;
+				}
+				if(height <= 0){
+					return true;
+				}
+				return false;
+			}
+			
 			int getHeight() {
 				return height;
 			}
@@ -44,6 +55,9 @@ public class hw1{
 			
 			@Override
 			double area() {
+				if(noneEdge()) {
+					return 0;
+				}
 				double x = Double.valueOf(base);
 				double y = Double.valueOf(height);
 				return x*y/2;
@@ -75,8 +89,18 @@ public class hw1{
 			}
 			//
 			
+			boolean noneEdge() {
+				if (radius <= 0) {
+					return true;
+				}
+				return false;
+			}
+			
 			@Override
 			double area() {
+				if(noneEdge()) {
+					return 0;
+				}
 				double x = Double.valueOf(radius);
 				x = Math.PI*x*x;
 				return x  = Math.round(x*100.0)/100.0;
@@ -112,6 +136,13 @@ public class hw1{
 			}
 			//
 			
+			boolean noneEdge() {
+				if (length <= 0) {
+					return true;
+				}
+				return false;
+			}
+			
 			int getLength() {
 				return length;
 			}
@@ -130,6 +161,9 @@ public class hw1{
 			}
 			@Override
 			double area() {
+				if(noneEdge()) {
+					return 0;
+				}
 				double x = Double.valueOf(length);
 				return x*x ;
 			}
@@ -151,6 +185,18 @@ public class hw1{
 			//
 			
 			@Override
+			boolean noneEdge() {
+				if (getLength() <= 0) {
+					return true;
+				}
+				if (width <= 0) {
+					return true;
+				}
+				return false;
+				
+			}
+			
+			@Override
 			void print() {
 				System.out.println(getName() + "(" + getLength() + ", " +  width + ") : "  + area());
 			}
@@ -164,6 +210,9 @@ public class hw1{
 			}
 			@Override
 			double area() {
+				if(noneEdge()) {
+					return 0;
+				}
 				return Double.valueOf(width)*Double.valueOf(getLength());
 			}
 		}
