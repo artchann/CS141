@@ -20,7 +20,7 @@ struct Shape{
     char* name;
 };
 
-//Circle functions
+//Shape functions
 char* getName(Shape* _this){
     //will return original copy... best practice is malloc here?
     return _this->name;
@@ -37,13 +37,16 @@ Shape* Shape_Constructor(Shape* _this, char* name){
 }
 //
 
-struct Circle{
-
+struct Triangle {
+    VTableUnit* vPtr;
+    double base;
+    double height;
 };
 
 int main(){
     char name[] = "Shape";
     Shape* a = Shape_Constructor((Shape*)malloc(sizeof(Shape)), name);
-
+    char* nameFinal = a->vPtr[0].charMethod(a);
+    printf("%s\n", nameFinal);
 }
 
