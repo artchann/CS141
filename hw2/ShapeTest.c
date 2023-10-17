@@ -130,8 +130,49 @@ Circle* Circle_Constructor(Circle* _this, char* name, int radius){
     _this->radius = radius;
     return _this;
 }
-
 //
+
+struct Square{
+    VTableUnit* vPtr;
+    char* name;
+    int length;
+};
+//square functions
+double getSquareArea(Square* _this){
+    return (double)_this->length*(double)_this->length;
+}
+
+void printSquare(Square* _this){
+    printf("%s", _this->vPtr[GET_NAME_INDEX].charMethod((Shape*)_this));
+    printf("(");
+    printf("%i", _this->length);
+    printf(") : ");
+    printf("%f\n", _this->vPtr[GET_AREA_INDEX].doubleMethod(_this));
+}
+
+void drawSquare(Square* _this){
+    printf("*****\n");
+    printf("*   *\n");
+    printf("*   *\n");
+    printf("*****\n"); 
+}
+
+VTableUnit Square_VTable[] = {
+    {.charMethod = (char_method_type)getName},
+    {.doubleMethod = (double_method_type)getSquareArea},
+    {.voidMethod = (void_method_type)printSquare},
+    {.voidMethod = (void_method_type)drawSquare},
+};
+
+Square* Square_Constructor(Square* _this, char* name, int length){
+    Shape_Constructor((Shape*)_this, name);
+    _this->vPtr = Square_VTable;
+    _this->length = length;
+    return _this;
+}
+//
+
+
 
 int main(){
     char name[] = "Shape";
@@ -156,5 +197,13 @@ int main(){
     printf("%f\n", circ->vPtr[GET_AREA_INDEX].doubleMethod(circ));
     circ->vPtr[PRINT_INDEX].voidMethod(circ);
     circ->vPtr[DRAW_INDEX].voidMethod(circ);
+
+    char sqName[] = "Square";
+    int length = 5;
+    Square* sq = Square_Constructor((Square*)malloc(sizeof(Square)), sqName, length);
+    printf("%s\n", sq->vPtr[GET_NAME_INDEX].charMethod((Shape*)sq));
+    printf("%f\n", sq->vPtr[GET_AREA_INDEX].doubleMethod(sq));
+    sq->vPtr[PRINT_INDEX].voidMethod(sq);
+    sq->vPtr[DRAW_INDEX].voidMethod(sq);
 }
 
