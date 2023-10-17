@@ -172,7 +172,53 @@ Square* Square_Constructor(Square* _this, char* name, int length){
 }
 //
 
+struct Rectangle{
+    VTableUnit* vPtr;
+    char* name;
+    int length;
+    int width;
+};
 
+//Rectangle functions
+
+double getRectArea(Rectangle* _this){
+    return (double)_this->length*(double)_this->width;
+}
+
+void printRectangle(Rectangle* _this){
+    printf("%s", _this->vPtr[GET_NAME_INDEX].charMethod((Shape*)_this));
+    printf("(");
+    printf("%i", _this->length);
+    printf(", ");
+    printf("%i", _this->width);
+    printf(") : ");
+    printf("%f\n", _this->vPtr[GET_AREA_INDEX].doubleMethod(_this));
+}
+
+void drawRectangle(Rectangle* _this){
+    printf("***\n");
+    printf("* *\n");
+    printf("* *\n");
+    printf("* *\n");
+    printf("***\n");
+
+}
+
+VTableUnit Rectangle_VTable [] = {
+    {.charMethod = (char_method_type)getName},
+    {.doubleMethod = (double_method_type)getRectArea},
+    {.voidMethod = (void_method_type)printRectangle},
+    {.voidMethod = (void_method_type)drawRectangle}
+};
+
+Rectangle* Rectangle_Constructor(Rectangle* _this, char* name, int length, int width){
+    Square_Constructor((Square*)_this, name, length);
+    _this->vPtr = Rectangle_VTable;
+    _this->width = width;
+    return _this;
+}
+
+//
 
 int main(){
     char name[] = "Shape";
@@ -205,5 +251,13 @@ int main(){
     printf("%f\n", sq->vPtr[GET_AREA_INDEX].doubleMethod(sq));
     sq->vPtr[PRINT_INDEX].voidMethod(sq);
     sq->vPtr[DRAW_INDEX].voidMethod(sq);
+
+    char rectName[] = "Rectangle";
+    int width = 4;
+    Rectangle* rect = Rectangle_Constructor((Rectangle*)malloc(sizeof(Rectangle)), rectName, length, width);
+    printf("%s\n", rect->vPtr[GET_NAME_INDEX].charMethod((Shape*)rect));
+    printf("%f\n", rect->vPtr[GET_AREA_INDEX].doubleMethod(rect));
+    rect->vPtr[PRINT_INDEX].voidMethod(rect);
+    rect->vPtr[DRAW_INDEX].voidMethod(rect);
 }
 
