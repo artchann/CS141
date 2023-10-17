@@ -18,6 +18,8 @@ typedef union{
 #define GET_AREA_INDEX 1
 #define PRINT_INDEX 2
 #define DRAW_INDEX 3
+#define PI 3.14159
+
 
 struct Shape{
     VTableUnit* vPtr;
@@ -49,12 +51,12 @@ struct Triangle {
 };
 //triangle functions
 
-double getArea(Triangle* _this){
+double getTriArea(Triangle* _this){
     double area = (double)_this->base*(double)_this->height / 2;
     return area;
 }
 
-void print(Triangle* _this){
+void printTri(Triangle* _this){
     printf("%s",_this->vPtr[GET_NAME_INDEX].charMethod((Shape*)_this) );
     printf("(");
     printf("%i", _this->base);
@@ -64,10 +66,18 @@ void print(Triangle* _this){
     printf("%f\n",_this->vPtr[GET_AREA_INDEX].doubleMethod(_this));
 }
 
+void drawTri(Triangle* _this){
+    printf("   *   \n");
+    printf("  * *  \n");
+    printf(" *   * \n");
+    printf("*******\n");
+}
+
 VTableUnit Triangle_VTable [] = {
     {.charMethod=(char_method_type)getName},
-    {.doubleMethod=(double_method_type)getArea},
-    {.voidMethod=(void_method_type)print}
+    {.doubleMethod=(double_method_type)getTriArea},
+    {.voidMethod=(void_method_type)printTri},
+    {.voidMethod=(void_method_type)drawTri}
 };
 
 Triangle* Triangle_Constructor(Triangle* _this, char* name, int base, int height){
@@ -75,6 +85,49 @@ Triangle* Triangle_Constructor(Triangle* _this, char* name, int base, int height
     _this->vPtr = Triangle_VTable;
     _this->base = base;
     _this->height = height;
+    return _this;
+}
+//
+
+struct Circle{
+    VTableUnit* vPtr;
+    char* name;
+    int radius;
+};
+
+//circle functions
+double getCircArea(Circle* _this){
+    return _this->radius*_this->radius*PI;
+}
+
+void printCirc(Circle* _this){
+    printf("%s", _this->vPtr[GET_NAME_INDEX].charMethod((Shape*)_this));
+    printf("("); 
+    printf("%i", _this->radius);
+    printf(") : ");
+    printf("%f\n", _this->vPtr[GET_AREA_INDEX].doubleMethod(_this));
+}
+
+void drawCirc(Circle* _this){
+    printf("    ***    \n");
+    printf("  *     *  \n");
+    printf(" *       * \n");
+    printf(" *       * \n");
+    printf("  *     *  \n");
+    printf("    ***    \n");
+}
+
+VTableUnit Circle_VTable [] = {
+    {.charMethod = (char_method_type)getName},
+    {.doubleMethod = (double_method_type)getCircArea},
+    {.voidMethod = (void_method_type)printCirc},
+    {.voidMethod = (void_method_type)drawCirc}
+};
+
+Circle* Circle_Constructor(Circle* _this, char* name, int radius){
+    Shape_Constructor((Shape*)_this, name);
+    _this->vPtr = Circle_VTable;
+    _this->radius = radius;
     return _this;
 }
 
@@ -89,11 +142,19 @@ int main(){
     char triName[] = "Triangle";
     int base = 5;
     int height = 5;
-    Triangle* tri = Triangle_Constructor((Triangle*)malloc(sizeof(Shape)), triName, base, height);
+    Triangle* tri = Triangle_Constructor((Triangle*)malloc(sizeof(Triangle)), triName, base, height);
 
     printf("%s\n", tri->vPtr[GET_NAME_INDEX].charMethod((Shape*)tri));
     printf("%f\n", tri->vPtr[GET_AREA_INDEX].doubleMethod(tri));
-    //printf("%s\n", tri->vPtr[PRINT_INDEX].voidMethod(tri));
     tri->vPtr[PRINT_INDEX].voidMethod(tri);
+    tri->vPtr[DRAW_INDEX].voidMethod(tri);
+
+    char circName[] = "Circle";
+    int radius = 4;
+    Circle* circ = Circle_Constructor((Circle*)malloc(sizeof(Circle)), circName, radius);
+    printf("%s\n", circ->vPtr[GET_NAME_INDEX].charMethod((Shape*)circ));
+    printf("%f\n", circ->vPtr[GET_AREA_INDEX].doubleMethod(circ));
+    circ->vPtr[PRINT_INDEX].voidMethod(circ);
+    circ->vPtr[DRAW_INDEX].voidMethod(circ);
 }
 
