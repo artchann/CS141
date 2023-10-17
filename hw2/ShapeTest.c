@@ -6,7 +6,7 @@ using namespace std;
 
 typedef double (*double_method_type)(void *);
 typedef void (*void_method_type)(void *);
-typedef char* (*char_method_type)(void*);
+typedef char* (*char_method_type)(void *);
 
 typedef union{
     double_method_type doubleMethod;
@@ -54,14 +54,25 @@ double getArea(Triangle* _this){
     return area;
 }
 
+void print(Triangle* _this){
+    printf("%s",_this->vPtr[GET_NAME_INDEX].charMethod((Shape*)_this) );
+    printf("(");
+    printf("%i", _this->base);
+    printf(", ");
+    printf("%i", _this->height);
+    printf(") : ");
+    printf("%f\n",_this->vPtr[GET_AREA_INDEX].doubleMethod(_this));
+}
+
 VTableUnit Triangle_VTable [] = {
     {.charMethod=(char_method_type)getName},
-    {.doubleMethod=(double_method_type)getArea}
+    {.doubleMethod=(double_method_type)getArea},
+    {.voidMethod=(void_method_type)print}
 };
 
 Triangle* Triangle_Constructor(Triangle* _this, char* name, int base, int height){
+    Shape_Constructor((Shape*)_this, name);
     _this->vPtr = Triangle_VTable;
-    _this->name = name;
     _this->base = base;
     _this->height = height;
     return _this;
@@ -80,7 +91,9 @@ int main(){
     int height = 5;
     Triangle* tri = Triangle_Constructor((Triangle*)malloc(sizeof(Shape)), triName, base, height);
 
-    printf("%f\n", tri->vPtr[GET_AREA_INDEX].doubleMethod(tri));
     printf("%s\n", tri->vPtr[GET_NAME_INDEX].charMethod((Shape*)tri));
+    printf("%f\n", tri->vPtr[GET_AREA_INDEX].doubleMethod(tri));
+    //printf("%s\n", tri->vPtr[PRINT_INDEX].voidMethod(tri));
+    tri->vPtr[PRINT_INDEX].voidMethod(tri);
 }
 
