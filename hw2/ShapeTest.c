@@ -271,6 +271,7 @@ int main(int argc, char* argv[]){
     };
     printAll(picture,8);
     drawAll(picture, 8);
+    printf("Total : ");
     printf("%.2f\n", totalArea(picture,8));
 }
 
