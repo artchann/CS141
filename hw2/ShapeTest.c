@@ -7,6 +7,7 @@ using namespace std;
 typedef double (*double_method_type)(void *);
 typedef void (*void_method_type)(void *);
 typedef char* (*char_method_type)(void *);
+typedef void (*picture_method_type)(void *, int);
 
 typedef union{
     double_method_type doubleMethod;
@@ -63,7 +64,7 @@ void printTri(Triangle* _this){
     printf(", ");
     printf("%i", _this->height);
     printf(") : ");
-    printf("%f\n",_this->vPtr[GET_AREA_INDEX].doubleMethod(_this));
+    printf("%.2f\n",_this->vPtr[GET_AREA_INDEX].doubleMethod(_this));
 }
 
 void drawTri(Triangle* _this){
@@ -105,7 +106,7 @@ void printCirc(Circle* _this){
     printf("("); 
     printf("%i", _this->radius);
     printf(") : ");
-    printf("%f\n", _this->vPtr[GET_AREA_INDEX].doubleMethod(_this));
+    printf("%.2f\n", _this->vPtr[GET_AREA_INDEX].doubleMethod(_this));
 }
 
 void drawCirc(Circle* _this){
@@ -147,7 +148,7 @@ void printSquare(Square* _this){
     printf("(");
     printf("%i", _this->length);
     printf(") : ");
-    printf("%f\n", _this->vPtr[GET_AREA_INDEX].doubleMethod(_this));
+    printf("%.2f\n", _this->vPtr[GET_AREA_INDEX].doubleMethod(_this));
 }
 
 void drawSquare(Square* _this){
@@ -192,7 +193,7 @@ void printRectangle(Rectangle* _this){
     printf(", ");
     printf("%i", _this->width);
     printf(") : ");
-    printf("%f\n", _this->vPtr[GET_AREA_INDEX].doubleMethod(_this));
+    printf("%.2f\n", _this->vPtr[GET_AREA_INDEX].doubleMethod(_this));
 }
 
 void drawRectangle(Rectangle* _this){
@@ -217,47 +218,59 @@ Rectangle* Rectangle_Constructor(Rectangle* _this, char* name, int length, int w
     _this->width = width;
     return _this;
 }
-
 //
 
-int main(){
-    char name[] = "Shape";
-    Shape* a = Shape_Constructor((Shape*)malloc(sizeof(Shape)), name);
-    char* nameFinal = a->vPtr[GET_NAME_INDEX].charMethod(a);
-    printf("%s\n", nameFinal);
+void drawAll(Shape* allShapes[], int numShapes){
+    for (int i = 0 ;i < numShapes; i++){
+        allShapes[i]->vPtr[DRAW_INDEX].voidMethod(allShapes[i]);
+    }
+}
 
-    char triName[] = "Triangle";
-    int base = 5;
-    int height = 5;
-    Triangle* tri = Triangle_Constructor((Triangle*)malloc(sizeof(Triangle)), triName, base, height);
+void printAll(Shape* allShapes[], int numShapes){
+    for(int i=0; i < numShapes; i++){
+        allShapes[i]->vPtr[PRINT_INDEX].voidMethod(allShapes[i]);
+    }
+}
 
-    printf("%s\n", tri->vPtr[GET_NAME_INDEX].charMethod((Shape*)tri));
-    printf("%f\n", tri->vPtr[GET_AREA_INDEX].doubleMethod(tri));
-    tri->vPtr[PRINT_INDEX].voidMethod(tri);
-    tri->vPtr[DRAW_INDEX].voidMethod(tri);
+double totalArea(Shape* allShapes[], int numShapes){
+    double sum =0;
+    for(int i=0; i< numShapes; i++){
+        sum += allShapes[i]->vPtr[GET_AREA_INDEX].doubleMethod(allShapes[i]);
+    }
+    return sum;
+}
 
-    char circName[] = "Circle";
-    int radius = 4;
-    Circle* circ = Circle_Constructor((Circle*)malloc(sizeof(Circle)), circName, radius);
-    printf("%s\n", circ->vPtr[GET_NAME_INDEX].charMethod((Shape*)circ));
-    printf("%f\n", circ->vPtr[GET_AREA_INDEX].doubleMethod(circ));
-    circ->vPtr[PRINT_INDEX].voidMethod(circ);
-    circ->vPtr[DRAW_INDEX].voidMethod(circ);
+int main(int argc, char* argv[]){
+    //printf("%s\n", argv[1]);
+    
+    //int x = atoi(argv[1]);
+    //printf("%i\n", x);
 
-    char sqName[] = "Square";
-    int length = 5;
-    Square* sq = Square_Constructor((Square*)malloc(sizeof(Square)), sqName, length);
-    printf("%s\n", sq->vPtr[GET_NAME_INDEX].charMethod((Shape*)sq));
-    printf("%f\n", sq->vPtr[GET_AREA_INDEX].doubleMethod(sq));
-    sq->vPtr[PRINT_INDEX].voidMethod(sq);
-    sq->vPtr[DRAW_INDEX].voidMethod(sq);
+    char triName [] = "FirstTriangle";
+    char triNameTwo [] = "SecondTriangle";
+    char circName [] = "FirstCircle";
+    char circNameTwo [] = "SecondCircle";
+    char squareName[] = "FirstSquare";
+    char squareNameTwo[] = "SecondSquare";
+    char rectangleName[] = "FirstRectangle";
+    char rectangleNameTwo[] = "SecondRectangle";
 
-    char rectName[] = "Rectangle";
-    int width = 4;
-    Rectangle* rect = Rectangle_Constructor((Rectangle*)malloc(sizeof(Rectangle)), rectName, length, width);
-    printf("%s\n", rect->vPtr[GET_NAME_INDEX].charMethod((Shape*)rect));
-    printf("%f\n", rect->vPtr[GET_AREA_INDEX].doubleMethod(rect));
-    rect->vPtr[PRINT_INDEX].voidMethod(rect);
-    rect->vPtr[DRAW_INDEX].voidMethod(rect);
+
+    int arg1 = atoi(argv[1]); 
+    int arg2 = atoi(argv[2]);
+
+    Shape* picture[] = {
+        (Shape*)Triangle_Constructor((Triangle*)malloc(sizeof(Triangle)), triName, arg1, arg2),
+        (Shape*)Triangle_Constructor((Triangle*)malloc(sizeof(Triangle)), triNameTwo, arg1-1, arg2-1),
+        (Shape*)Circle_Constructor((Circle*)malloc(sizeof(Circle)), circName, arg1),
+        (Shape*)Circle_Constructor((Circle*)malloc(sizeof(Circle)), circNameTwo, arg1-1),
+        (Shape*)Square_Constructor((Square*)malloc(sizeof(Square)), squareName, arg1),
+        (Shape*)Square_Constructor((Square*)malloc(sizeof(Square)), squareNameTwo, arg1-1),
+        (Shape*)Rectangle_Constructor((Rectangle*)malloc(sizeof(Rectangle)), rectangleName, arg1,arg2),
+        (Shape*)Rectangle_Constructor((Rectangle*)malloc(sizeof(Rectangle)), rectangleNameTwo, arg1-1, arg2-1)
+    };
+    printAll(picture,8);
+    drawAll(picture, 8);
+    printf("%.2f\n", totalArea(picture,8));
 }
 
