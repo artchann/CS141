@@ -238,7 +238,27 @@ class Vector {
 
   */
 
-  T operator * (const Vector & v) const {}
+  T operator * (const Vector & v) const {
+        if(this->buf == nullptr){
+            return 0;
+        }
+        else if (v.buf == nullptr){
+            return 0;
+        } 
+        int sum = 0;
+        
+        if(this->size() < v.size()){
+            for(int i = 0 ; i < this -> sz; i++){
+                sum += this->buf[i] * v.buf[i];
+            }
+        }
+        else{
+            for (int i = 0 ; i < v.size(); i++){
+                sum += v.buf[i] * this->buf[i];
+            }
+        }
+        return sum;
+  }
 
 
 
@@ -256,7 +276,25 @@ class Vector {
 
   */
 
-  Vector operator + (const Vector & v) const {}
+  Vector operator + (const Vector & v) const {
+        if(this->size() > v.size()){
+            Vector<int> returnMe(*this); 
+            for(int i = 0; i < v.size(); i++){
+                returnMe.buf[i] += v.buf[i];
+            }
+            return returnMe;
+        }
+        else{ //v.size() > this->size()
+            Vector<int> returnMe(v);
+            for(int i = 0 ; i < this->size(); i++){
+                //std::cout << "Tester returnMe buf[i]: " << returnMe.buf[i] << std:: endl;
+                //std::cout << "Tester v.buf[i]: " << v.buf[i] <<std::endl;
+                returnMe.buf[i] += this->buf[i];
+            }
+            return returnMe;
+        }
+            
+  }
 
 
 
@@ -274,7 +312,17 @@ class Vector {
 
   */
 
-  const Vector & operator = (const Vector & v) {}
+  const Vector & operator = (const Vector & v) {
+        if(this->size() != v.size()){
+            delete[] this->buf;
+            this->sz = v.size();
+            this->buf = new T[this->sz];
+        }
+        for(int i = 0; i < v.size(); i++){
+            this->buf[i] = v.buf[i];
+        }
+        return *this;
+  }
 
  
 
