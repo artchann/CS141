@@ -341,7 +341,18 @@ class Vector {
 
   */
 
-  bool operator == (const Vector & v) const {}
+  bool operator == (const Vector & v) const {
+        if(this->sz != v.size()){
+            return false;
+        }
+
+        for(int i =0 ; i < this->sz; i++){
+            if(this->buf[i] != v.buf[i]){
+                return false;
+            }
+        }
+        return true;
+  }
 
 
 
@@ -359,7 +370,17 @@ class Vector {
 
   */
 
-  bool operator != (const Vector & v) const {}
+  bool operator != (const Vector & v) const {
+        if(this->sz != v.size()){
+            return true;
+        }
+        for(int i =0 ; i < this->sz; i++){
+            if(this->buf[i] != v.buf[i]){
+                return true;
+            }
+        }
+        return false;
+  }
 
 
   /**
@@ -378,7 +399,19 @@ class Vector {
 
   */
 
-  inline friend Vector operator * (const int scale, const Vector & v) {}
+  inline friend Vector operator * (const int scale, const Vector & v) {
+        //if(*this == v){
+        //    delete[] this->buf;
+        //}
+
+
+        Vector<T> returnMe(v);
+        for(int i = 0; i < returnMe.sz; i++){
+            returnMe.buf[i] *= scale;
+        }
+        return returnMe;
+
+  }
 
 
 
@@ -398,7 +431,13 @@ class Vector {
 
   */
 
-  inline friend Vector operator + (const int adder, const Vector & v) {}
+  inline friend Vector operator + (const int adder, const Vector & v) {
+    Vector<T> returnMe(v);
+    for(int i = 0 ; i < returnMe.sz; i++){
+        returnMe.buf[i] += adder;
+    }
+    return returnMe;
+  }
 
 
   /**
@@ -415,7 +454,15 @@ class Vector {
 
   */
 
-  inline friend ostream& operator << (ostream & o, const Vector & v) {}
+  inline friend ostream& operator << (ostream & o, const Vector & v) {
+        o << "(";
+        for (int i =0 ; i < v.sz-1; i++){
+            o << v.buf[i] << ", ";
+        }
+        o << v.buf[v.sz-1];
+        o << ")";
+        return o ; 
+  }
 
  
 

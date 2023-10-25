@@ -13,11 +13,44 @@ int main() // Here is a start:
         doubleVec.printAll();
 
         Vector<int> duplicateInt(intVec);
+        int tester;
+        if(duplicateInt == intVec){
+            tester = 1;
+        }
+        else {
+            tester =0;
+        }
+
+        int tester2;
+        if(duplicateInt != intVec){
+            tester2 = 1;
+        }
+        else{
+            tester2 = 0;
+        }
+        std::cout << "Equivalence testing (1): " << tester << std::endl;
+        std::cout <<"Not Equivalent testing (0): " << tester2 << std::endl; 
+        
         duplicateInt.printAll();
         duplicateInt[4] = 1;
         
         std::cout << "testing fourth index mutation (needs 1):" << duplicateInt[4] << std::endl;
         
+        if(duplicateInt == intVec){
+            tester =1 ;
+        }
+        else {
+            tester = 0 ;
+        }
+
+        if(duplicateInt != intVec){
+            tester2 =1 ;
+        }
+        else{
+            tester2 = 0;
+        }
+        std::cout << "Equivalence testing (0): " << tester << std::endl;
+        std::cout << "Not Equivalent testing (1): " << tester2 <<std::endl;
         int testMe = duplicateInt[1];
         std::cout << "testing const access on first index (needs 3):" <<testMe << std::endl;
         
@@ -35,16 +68,19 @@ int main() // Here is a start:
         Vector<int> addVector = dotThree + dotFour;
         std::cout << "Adding 1 2 3 & 4 5: " << std::endl;
         addVector.printAll();
-        //ERROR HERE: LARGER SZ VECTOR PERSISTS
-        //DETERMINE IF FROM + OR = OPERATOR OVERLOAD
         addVector = dotFour + dotThree;
-        
-        //Vector<int> addVector1{4,5};
-        //addVector1 = addVector1 + dotThree;
         
 
         std::cout << "Adding 4 5 & 1 2 3: " << std::endl;
         addVector.printAll();
+        
+        addVector = 5 * addVector;
+        std::cout<< "Scale previous vector by five: " << std::endl;
+        addVector.printAll();
+
+        addVector  = 1 + addVector;
+        std::cout << addVector << std::endl;
+
         //Vector<int> iv{intVec};
 
         //Vector<double> dv{doubleVec};
