@@ -9,3 +9,36 @@
     ( T (MY-MEMQ A (cdr L))))
 )
 
+(defun MY-APPEND (L1 L2)
+    (cond ((null L1) L2)
+    (t (cons (car L1) (MY-APPEND (cdr L1) L2))))
+)
+
+(defun MY-REVERSE (L1)
+    (cond ((null L1) nil)
+    (t (MY-APPEND (MY-REVERSE (cdr L1)) (list (car L1)))))
+)
+
+(defun MY-MAPCAR (F L) 
+    (cond ((null L) nil)
+    (t (cons (apply F (list (car L))) (MY-MAPCAR F (cdr L)))))
+)
+
+(defun MY-COPY (L)
+    (cond ((atom L) L)
+    ((consp L) L)
+    (cons (MY-COPY (car L)) (MY-COPY (cdr L))))
+)
+
+(defun MY-NTH (L N)
+    (cond ((eq N 0) (cons nil L))
+    ((null L) nil)
+    ((eq N 1) L)
+    (t (MY-NTH (cdr L) (1- N))))
+)
+
+(defun MY-REMOVE (X L)
+    (cond ((null L) nil)
+    ((equal X (car L)) (MY-REMOVE X (cdr L)))
+    (t (cons (car L) (MY-REMOVE X (cdr L)))))
+)
