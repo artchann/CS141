@@ -42,3 +42,10 @@
     ((equal X (car L)) (MY-REMOVE X (cdr L)))
     (t (cons (car L) (MY-REMOVE X (cdr L)))))
 )
+
+(defun MY-SUBST (X Y Z)
+    (cond ((null Z) nil)
+    ((equal X (car Z)) (cons Y (MY-SUBST X Y (cdr Z))))
+    ((listp (car Z)) (cons (MY-SUBST X Y (car Z)) (MY-SUBST X Y (cdr Z))))
+    (t (cons (car Z) (MY-SUBST X Y (cdr Z)))))
+)
