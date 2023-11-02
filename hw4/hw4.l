@@ -49,3 +49,22 @@
     ((listp (car Z)) (cons (MY-SUBST X Y (car Z)) (MY-SUBST X Y (cdr Z))))
     (t (cons (car Z) (MY-SUBST X Y (cdr Z)))))
 )
+
+(defun MY-MERGE (L1 L2)
+    (cond ((null L1) L2)
+    ((null L2) L1)
+    ((<= (car L1) (car L2)) (cons (car L1) (MY-MERGE (cdr L1) L2)))
+    (t (cons (car L2) (MY-MERGE L1 (cdr L2)))))
+
+)
+
+(defun sublist-helper (l1 l2)
+    (cond ((null l1) t)
+        ((eq (car l1) (car l2)) (sublist-helper (cdr l1) (cdr l2))))
+)
+
+(defun MY-SUBLIST (l1 l2)
+    (cond ((null l2) nil)
+        ((eq (car l1) (car l2)) (sublist-helper (cdr l1) (cdr l2)))
+        (t (MY-SUBLIST l1 (cdr l2))))
+)
