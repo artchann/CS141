@@ -68,3 +68,9 @@
         ((eq (car l1) (car l2)) (sublist-helper (cdr l1) (cdr l2)))
         (t (MY-SUBLIST l1 (cdr l2))))
 )
+
+(defun MY-ASSOC (A L)
+	(cond ((null L) nil)
+	((eq (car (car L))) A (car L))
+	(t (MY-ASSOC A (cdr L))))
+)
