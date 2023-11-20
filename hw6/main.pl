@@ -65,6 +65,11 @@ my_add([0], [0], R) :- R =[0].
 my_add([], L2, R) :- my_append(R, L2, R).
 my_add(L1, [], R) :- my_append(R, L1, R).
 
+my_replace(_, [], []).
+my_replace(Alist, [H|T], [R|NewTail]) :- my_assoc(H, Alist, R),
+    my_replace(Alist, T, NewTail).
+my_replace(Alist,[H|T], [H|NewTail]) :- my_replace(Alist, T, NewTail). 
+
 mult_by_two([], []).
 mult_by_two([H|T], [NewH|R]) :-
     NewH is H * 2, mult_by_two(T, R).
