@@ -11,19 +11,22 @@ eval(X / Num, R) :- number(Num), R is X / Num.
 %simplify(X * Num, R) :- Result is Num, integer(Result), Result == 1,R = X.
 
 
+
 %IF LAST TERM IS A DIGIT AND THE FOLLOWING TERM IS A COMPOUND
 simplify(X + Num, R + Num) :- number(Num), compound(X), simplify(X,R).
 %IF FIRST TERM IS A NUMBER MINUS A COMPOUND -- SIMPLIFY COMPOUND
 simplify(X - Num, X - R) :- number(X), compound(Num), simplify(Num, R).
 %COMPOUND HAS A COEFFICIENT OF ONE, RETURN JUST THE VARIABLE
-simplify(X * Num, X) :- Result is Num, Result == 1. 
-
+simplify(X * Num, X) :- char_type(X, alpha), Result is Num, Result == 1. 
 
 %case 2 uses first rule
 %first term is 1*x, second term is - 0
 simplify(X - Num, R) :- Result is Num, Result == 0, simplify(X, R).
 simplify(X * Num, Num) :- char_type(Num, alpha), number(X), X == 1.
 
+%case 3
+simplify(X + Num, Result + Num) :- char_type(Num, alpha), Result is X.
+%simplify(X * Num, Result) :- Result is X, number(Result), number(Num), Result is Result * Num.
 
 %simplify(X, _) :- number(X).
 simplify(X, _) :- integer(X).
@@ -34,3 +37,7 @@ simplify(X / Num, R) :- number(Num), R is X / Num.
 simplify(X * 1, X).
 simplify(X + 0, X).
 simplify(_X * 0, 0).
+
+deriv(C, 0) :- number(C).
+deriv(X, 1) :- atom(X).
+deriv(X^2, 2*X). 
