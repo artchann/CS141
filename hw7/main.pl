@@ -18,8 +18,14 @@ simplify(X - Num, X - R) :- number(X), compound(Num), simplify(Num, R).
 %COMPOUND HAS A COEFFICIENT OF ONE, RETURN JUST THE VARIABLE
 simplify(X * Num, X) :- Result is Num, Result == 1. 
 
-%simplify(X, _) :- number(X).
 
+%case 2 uses first rule
+%first term is 1*x, second term is - 0
+simplify(X - Num, R) :- Result is Num, Result == 0, simplify(X, R).
+simplify(X * Num, Num) :- char_type(Num, alpha), number(X), X == 1.
+
+
+%simplify(X, _) :- number(X).
 simplify(X, _) :- integer(X).
 simplify(X + Num, R) :- number(Num), R is X + Num.
 simplify(X * Num, R) :- number(Num), R is X * Num.
