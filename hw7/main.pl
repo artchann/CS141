@@ -40,4 +40,21 @@ simplify(_X * 0, 0).
 
 deriv(C, 0) :- number(C).
 deriv(X, 1) :- atom(X).
-deriv(X^2, 2*X). 
+
+deriv(X^N, N*X^(N1)) :- number(N), N1 is N-1.
+deriv(A+B, D1+D2) :- deriv(A, D1), deriv(B, D2).
+
+party_seating(L) :- S is 10, seating_check(L, S).
+%can seat anyone
+seating_check([X|T] , S) :- S == 10, number_seats(S, Result), male(X), seating_check(T, Result).
+seating_check([X,T] , S) :- S == 10, number_seats(S, Result), female(X), seating_check(T, Result).
+
+seating_check(H|T, S) :- number_seats(S, Result), male(H), speaks(H, language(L)), female(T), speaks(T, language(L)), seating_check(T, Result).
+seating_check(H|T, S) :- number_seats(S, Result), female(H), speaks(H, language(L)), male(T), speaks(T, language(L)), seating_check(T, Result).
+
+%seating_check([H|T], S) :- number_seats(S,Result), 
+
+
+%number_seats(Num) :- Num == 10, Num is Num - 1.
+number_seats(Num, Result) :- Num > 0, Result is Num - 1.
+%number_seats(Num, Result) :- Num2 == 0, false.
