@@ -1,20 +1,31 @@
 import java.io.FileInputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Hashtable;
+
 class Disk
     // extends Thread
 {
     static final int NUM_SECTORS = 2048;
     StringBuffer sectors[] = new StringBuffer[NUM_SECTORS];
     static final int DISK_DELAY = 800;
+    //init all the string buffers
     Disk()
     {
     }
+    //read and write just copy the data from the string buffer
+    //write takes from stringbuffer data into disk
     void write(int sector, StringBuffer data)  // call sleep
     {
     }
+    //deep copies the data from disk into stringbuffer data 
     void read(int sector, StringBuffer data)   // call sleep
     {
+    }
+
+    //
+    void copyData(StringBuffer data){
+        
     }
 }
 
@@ -51,18 +62,20 @@ class FileInfo
     int fileLength;
 }
 
+//can convert to strings here
 class DirectoryManager
 {
-    // private Hashtable<String, FileInfo> T = new Hashtable<String, FileInfo>();
+    private Hashtable<String, FileInfo> T = new Hashtable<String, FileInfo>();
 
     DirectoryManager()
     {
     }
-
+    //user thread will call enter
     void enter(StringBuffer fileName, FileInfo file)
     {
     }
 
+    //printjobthread will call lookup
     FileInfo lookup(StringBuffer fileName)
     {
         return null;
@@ -71,13 +84,43 @@ class DirectoryManager
 
 class ResourceManager
 {
+    boolean isFree[];
+    ResourceManager(int numberOfItems) {
+        isFree = new boolean[numberOfItems];
+        for (int i=0; i<isFree.length; ++i){
+            isFree[i] = true;
+        }
+    }
+    synchronized int request() {
+        while (true) {
+            for (int i = 0; i < isFree.length; ++i){
+                if ( isFree[i] ) {
+                    isFree[i] = false;
+                    return i;
+                }
+            }
+            try{
+                this.wait();
+            }
+            catch(InterruptedException e) {e.printStackTrace();}
+        }
+    }   
+    synchronized void release( int index ) {
+        isFree[index] = true;
+        this.notify(); // let a blocked thread run
+    }
 }
-
-class DiskManager
+//diskmanager contain the directory manager
+class DiskManager extends ResourceManager
 {
+    DirectoryManager dirManager = new DirectoryManager();
+    DiskManager(int numDisks){
+        super(numDisks);
+    }
 }
 
-class PrinterManager
+//derived from resource manager
+class PrinterManager 
 {
 }
 
@@ -105,6 +148,8 @@ class UserThread
                 tokens = line.split(" ");
                 switch(tokens[0]){
                     case ".save":
+                        //HARDCODE ACCESS OF SINGLE DISK -- ONLY FOR HW8
+                        //Disk[0]
                         
                         break;
                     case ".end":
@@ -129,6 +174,7 @@ public class MainClass
     static UserThread[] users;
     static Printer[] printers;
     static Disk[] disks;
+
     public static void main(String args[])
     {
         initArrays(args);
