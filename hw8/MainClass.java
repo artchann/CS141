@@ -2,6 +2,7 @@ import java.io.FileInputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Hashtable;
+import java.lang.StringBuffer;
 
 class Disk
     // extends Thread
@@ -9,6 +10,8 @@ class Disk
     static final int NUM_SECTORS = 2048;
     StringBuffer sectors[] = new StringBuffer[NUM_SECTORS];
     static final int DISK_DELAY = 800;
+    int nextFreeSector = 0;
+    int currFileSz = 0;
     //init all the string buffers
     Disk()
     {
@@ -17,6 +20,10 @@ class Disk
     //write takes from stringbuffer data into disk
     void write(int sector, StringBuffer data)  // call sleep
     {
+        nextFreeSector++;
+        currFileSz++; 
+        System.out.println(data);
+        sectors[sector] = new StringBuffer(data);
     }
     //deep copies the data from disk into stringbuffer data 
     void read(int sector, StringBuffer data)   // call sleep
@@ -26,6 +33,10 @@ class Disk
     //
     void copyData(StringBuffer data){
         
+    }
+
+    int getNextFreeSector(){
+        return nextFreeSector;
     }
 }
 
@@ -63,6 +74,7 @@ class FileInfo
 }
 
 //can convert to strings here
+//on END call directory manager so we know how long the file iss
 class DirectoryManager
 {
     private Hashtable<String, FileInfo> T = new Hashtable<String, FileInfo>();
@@ -73,6 +85,7 @@ class DirectoryManager
     //user thread will call enter
     void enter(StringBuffer fileName, FileInfo file)
     {
+        
     }
 
     //printjobthread will call lookup
@@ -113,22 +126,30 @@ class ResourceManager
 //diskmanager contain the directory manager
 class DiskManager extends ResourceManager
 {
+    //ALSO KEEPS TRACK OF NEXT SECTOR, NOT SURE OF IMPLEMENTATION SAVE FOR HW9
     DirectoryManager dirManager = new DirectoryManager();
     DiskManager(int numDisks){
         super(numDisks);
     }
+    public void tester(){
+    }
 }
 
 //derived from resource manager
-class PrinterManager 
+class PrinterManager extends ResourceManager 
 {
-}
+    PrinterManager(int numPrinters){
+        super(numPrinters);
+    }
 
+}
 class UserThread
     extends Thread
 {
     FileInputStream inputStream;
     BufferedReader myReader;
+    //consider removing not sure where to put the return of diskmanager
+    int usedDisk;
     UserThread(int id) // my commands come from an input file with name USERi where i is my user id
     {
         try{
@@ -143,37 +164,71 @@ class UserThread
     {
         try{
             myReader = new BufferedReader(new InputStreamReader(inputStream));
-            String[] tokens;
+        }
+        catch(Exception e){e.getMessage();}
+        
+        //possibly need to account for if user inputs commands out of order
+        try{
+            String fName = "";
+
+            //CURRERNTLY HARD CODED -- NEED TO FIX THIS ASAP
+            int currDisk = 0;
             for(String line; (line = myReader.readLine()) != null; ){
-                tokens = line.split(" ");
-                switch(tokens[0]){
-                    case ".save":
-                        //HARDCODE ACCESS OF SINGLE DISK -- ONLY FOR HW8
-                        //Disk[0]
-                        
-                        break;
-                    case ".end":
-                        break;
-                    case ".print":
-                        break;
-                    default:
-                        //System.out.println("Unknown CMD");
-                        break;
+                if(line.startsWith(MainClass.SAVE_COMMAND)){
+                    fName = line.substring(MainClass.SAVE_COMMAND.length()+1); 
+                    currDisk = MainClass.diskManage.request();
                 }
-                //writes out all the user input file here
-                //System.out.println(line);
+                else if(line.startsWith(fName)){
+                    StringBuffer lines = new StringBuffer(line);
+
+                    //currently out of order, we're having the UserThread sleep instead of the disk
+                    this.sleep(MainClass.disks[currDisk].DISK_DELAY);
+
+                    MainClass.disks[currDisk].write(MainClass.disks[currDisk].getNextFreeSector(), lines);
+
+                }
+                else if(line.startsWith(MainClass.END_COMMAND)){
+                    
+                    break;
+                    //diskManage.enter(lines, fInfo);
+                }
+
             }
         }
         catch(Exception e){e.getMessage();}
     }
 }
 
+// System.out.println("ignore");
+// switch(tokens[0]){
+//     case ".save": 
+//         //once thread unblocks can move forward anyway
+//         //if thread blocks we stay here
+//         //can write now
+//         int currDisk = MainClass.diskManage.request();
+//         break;
+//     case ".end":
+//         break;
+//     case ".print":
+//         break;
+//     default:
+//         //System.out.println("Unknown CMD");
+//         break;
+// }
+ //writes out all the user input file here
+ //System.out.println(line);
 
 public class MainClass
 {
+    public static final String SAVE_COMMAND = ".save";
+    public static final String PRINT_COMMAND = ".print";
+    public static final String END_COMMAND = ".end";
+    
     static UserThread[] users;
     static Printer[] printers;
     static Disk[] disks;
+    static DiskManager diskManage;
+    static PrinterManager printManage;
 
     public static void main(String args[])
     {
@@ -182,6 +237,9 @@ public class MainClass
             System.out.println("Args[" + i + "] = " + args[i]);
 
         System.out.println("*** 141 OS Simulation ***");
+        
+        initManagers(args);
+        
         startUserThreads(users);
     }
 
@@ -204,5 +262,10 @@ public class MainClass
         for(int i = 0 ; i < users.length; i++){
             users[i].start();
         }
+    }
+    //inputs available amount of hardware (boolean array)
+    private static void initManagers(String args[]){
+        diskManage = new DiskManager(Integer.parseInt(args[1]));
+        printManage = new PrinterManager(Integer.parseInt(args[2]));
     }
 }
