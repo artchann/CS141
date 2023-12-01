@@ -9,9 +9,12 @@ class Disk
 {
     static final int NUM_SECTORS = 2048;
     StringBuffer sectors[] = new StringBuffer[NUM_SECTORS];
-    static final int DISK_DELAY = 800;
-    int nextFreeSector = 0;
-    int currFileSz = 0;
+    //CHANGE THIS VALUE FOR GRADESCOPE
+    static final int DISK_DELAY = 0;
+    //
+    private int nextFreeSector = 0;
+    private int currBeginSector = 0;
+    private int currFileSz = 0;
     //init all the string buffers
     Disk()
     {
@@ -38,6 +41,18 @@ class Disk
     int getNextFreeSector(){
         return nextFreeSector;
     }
+    int getCurrFileSz(){
+        return currFileSz;
+    }
+    int getCurrBeginSector(){
+        return currBeginSector;
+    }
+    void resetCurrFileSz(){
+        currFileSz = 0;
+    }
+    void updateCurrBeginSector(){
+        currBeginSector = nextFreeSector;
+    }
 }
 
 class Printer
@@ -56,18 +71,29 @@ class PrintJobThread
     extends Thread
 {
     StringBuffer line = new StringBuffer(); // only allowed one line to reuse for read from disk and print to printer
-
+    String fName;
+    
     PrintJobThread(String fileToPrint)
     {
+        fName = fileToPrint;
     }
 
     public void run()
     {
+        int currPrinter = MainClass.printManage.request();
+        //if continue we have a printer
+        //read a sector from disk and send to printer here
+        
     }
 }
 
 class FileInfo
 {
+    FileInfo(int diskNum, int startSector, int fileLen){
+        this.diskNumber = diskNum;
+        this.startingSector = startSector;
+        this.fileLength = fileLen;
+    }
     int diskNumber;
     int startingSector;
     int fileLength;
@@ -85,13 +111,13 @@ class DirectoryManager
     //user thread will call enter
     void enter(StringBuffer fileName, FileInfo file)
     {
-        
+        T.put(fileName.toString(), file);
     }
 
     //printjobthread will call lookup
     FileInfo lookup(StringBuffer fileName)
     {
-        return null;
+        return T.get(fileName.toString());
     }
 }
 
@@ -127,9 +153,12 @@ class ResourceManager
 class DiskManager extends ResourceManager
 {
     //ALSO KEEPS TRACK OF NEXT SECTOR, NOT SURE OF IMPLEMENTATION SAVE FOR HW9
-    DirectoryManager dirManager = new DirectoryManager();
+    private DirectoryManager dirManager = new DirectoryManager();
     DiskManager(int numDisks){
         super(numDisks);
+    }
+    DirectoryManager getDirManager(){
+        return dirManager;
     }
     public void tester(){
     }
@@ -171,8 +200,9 @@ class UserThread
         try{
             String fName = "";
 
-            //CURRERNTLY HARD CODED -- NEED TO FIX THIS ASAP
+            //CURRERNTLY HARD CODED -- NEED TO FIX THIS ASAP, CURR DISK MAY NOT NECESSARILY BE 0 FOR FUTURE THREADS
             int currDisk = 0;
+            //****************** consider setting it to OOB value to catch exception
             for(String line; (line = myReader.readLine()) != null; ){
                 if(line.startsWith(MainClass.SAVE_COMMAND)){
                     fName = line.substring(MainClass.SAVE_COMMAND.length()+1); 
@@ -188,16 +218,37 @@ class UserThread
 
                 }
                 else if(line.startsWith(MainClass.END_COMMAND)){
-                    
+                    FileInfo currFile = new FileInfo(currDisk, MainClass.disks[currDisk].getCurrBeginSector(), MainClass.disks[currDisk].getCurrFileSz());
+ 
+                    userDataPrinter(currDisk);
+                 
+                    //CREATE CONFIG
+                    MainClass.diskManage.getDirManager().enter(new StringBuffer(fName), currFile);
+                    MainClass.disks[currDisk].resetCurrFileSz();
+                    MainClass.disks[currDisk].updateCurrBeginSector();
+                    //
+                    MainClass.diskManage.release(currDisk);
+                    System.out.println("Beginning of new sector: " + MainClass.disks[currDisk].getCurrBeginSector());
+
+                }
+                else if(line.startsWith(MainClass.PRINT_COMMAND)){
+                    fName = line.substring(MainClass.PRINT_COMMAND.length()+1);
+                    PrintJobThread currPThread = new PrintJobThread(fName);
+                    currPThread.start();
                     break;
-                    //diskManage.enter(lines, fInfo);
                 }
 
             }
         }
         catch(Exception e){e.getMessage();}
     }
+    public void userDataPrinter(int currDisk){
+            System.out.println("Beginning sector before write: " + MainClass.disks[currDisk].getCurrBeginSector());
+            System.out.println("NextFreeSector after write: " + MainClass.disks[currDisk].getNextFreeSector());
+            System.out.println("Size of current file: " + MainClass.disks[currDisk].getCurrFileSz());
+    }
 }
+
 
 // System.out.println("ignore");
 // switch(tokens[0]){
