@@ -1,4 +1,4 @@
-import java.io.FileInputStream;
+import java.io.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Hashtable;
@@ -31,6 +31,9 @@ class Disk
     //deep copies the data from disk into stringbuffer data 
     void read(int sector, StringBuffer data)   // call sleep
     {
+        //System.out.println("Read Sector is: " + sector);
+        //can retrieve correct sectors, now actually return values
+        data.append(sectors[sector]);
     }
 
     //
@@ -58,12 +61,27 @@ class Disk
 class Printer
     // extends Thread
 {
+    static final int PRINT_DELAY = 1;
+    private int id;
+    boolean writing = false;
     Printer(int id)
     {
+        this.id = id; 
     }
 
+    //can always retrieve data from disk, jsut can't print START HERE
     void print(StringBuffer data)  // call sleep
     {
+        try{
+            BufferedWriter outStream = new BufferedWriter(new FileWriter("PRINTER"+id, true));
+            outStream.write(data.toString());
+            outStream.write("\n");
+            outStream.close();
+            //writer.write("tester");
+            //writer.write("\n");
+            //System.out.println(data);
+        }
+        catch(Exception e) {e.getMessage();}
     }
 }
 
@@ -80,9 +98,37 @@ class PrintJobThread
 
     public void run()
     {
+        //if we can continue we have a printer
         int currPrinter = MainClass.printManage.request();
-        //if continue we have a printer
-        //read a sector from disk and send to printer here
+
+        FileInfo readMe = MainClass.diskManage.getDirManager().lookup(new StringBuffer(fName));
+        StringBuffer readLine = new StringBuffer();
+        for(int i = 0; i < readMe.fileLength; i++){
+        //read operations don't require exclusive rights, we can sleep here for the READ process of acquiring disk material ?
+        //NEED TO GET CORRECT EXCEPTION HERE !!!! ***********
+            try{
+                this.sleep(MainClass.disks[0].DISK_DELAY);
+            }
+            catch(Exception e) {e.getMessage();}
+            MainClass.disks[readMe.diskNumber].read(readMe.startingSector + i, readLine);
+            
+            //System.out.println(readLine);
+            //wait for each print line
+            
+            try{
+                this.sleep(MainClass.printers[0].PRINT_DELAY);
+            }
+            catch(Exception e) {e.getMessage();}
+            
+            //WILL RETRIEVE INTO READLINE ALL VALUES READ FROM DISK
+            //System.out.println(readLine);
+            
+            MainClass.printers[currPrinter].print(readLine);
+            readLine.delete(0, readLine.length());
+        }
+        //free the resource here
+        MainClass.printManage.release(currPrinter);
+        // do we need toclose the thread ?
         
     }
 }
@@ -240,7 +286,10 @@ class UserThread
 
             }
         }
+
         catch(Exception e){e.getMessage();}
+        
+        //close input streams!
     }
     public void userDataPrinter(int currDisk){
             System.out.println("Beginning sector before write: " + MainClass.disks[currDisk].getCurrBeginSector());
@@ -248,26 +297,6 @@ class UserThread
             System.out.println("Size of current file: " + MainClass.disks[currDisk].getCurrFileSz());
     }
 }
-
-
-// System.out.println("ignore");
-// switch(tokens[0]){
-//     case ".save": 
-//         //once thread unblocks can move forward anyway
-//         //if thread blocks we stay here
-//         //can write now
-//         int currDisk = MainClass.diskManage.request();
-//         break;
-//     case ".end":
-//         break;
-//     case ".print":
-//         break;
-//     default:
-//         //System.out.println("Unknown CMD");
-//         break;
-// }
- //writes out all the user input file here
- //System.out.println(line);
 
 public class MainClass
 {
@@ -318,5 +347,14 @@ public class MainClass
     private static void initManagers(String args[]){
         diskManage = new DiskManager(Integer.parseInt(args[1]));
         printManage = new PrinterManager(Integer.parseInt(args[2]));
+        
+        try{
+        //FIX THIS/\ -- probably want to move it somewhere else
+            for(int i = 0; i < printers.length; i++){
+                BufferedWriter outStream = new BufferedWriter (new FileWriter("PRINTER" + i));
+                outStream.close();
+            }
+        }
+        catch(Exception e) {e.getMessage();}
     }
 }
