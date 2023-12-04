@@ -10,7 +10,8 @@ class Disk
     static final int NUM_SECTORS = 2048;
     StringBuffer sectors[] = new StringBuffer[NUM_SECTORS];
     //CHANGE THIS VALUE FOR GRADESCOPE
-    static final int DISK_DELAY = 0;
+    //was 80
+    static final int DISK_DELAY = 80;
     //
     private int nextFreeSector = 0;
     private int currBeginSector = 0;
@@ -25,7 +26,7 @@ class Disk
     {
         nextFreeSector++;
         currFileSz++; 
-        System.out.println(data);
+        //System.out.println(data);
         sectors[sector] = new StringBuffer(data);
     }
     //deep copies the data from disk into stringbuffer data 
@@ -61,7 +62,8 @@ class Disk
 class Printer
     // extends Thread
 {
-    static final int PRINT_DELAY = 1;
+    //was 275
+    static final int PRINT_DELAY = 275;
     private int id;
     boolean writing = false;
     Printer(int id)
@@ -266,7 +268,7 @@ class UserThread
                 else if(line.startsWith(MainClass.END_COMMAND)){
                     FileInfo currFile = new FileInfo(currDisk, MainClass.disks[currDisk].getCurrBeginSector(), MainClass.disks[currDisk].getCurrFileSz());
  
-                    userDataPrinter(currDisk);
+                    //userDataPrinter(currDisk);
                  
                     //CREATE CONFIG
                     MainClass.diskManage.getDirManager().enter(new StringBuffer(fName), currFile);
@@ -274,14 +276,16 @@ class UserThread
                     MainClass.disks[currDisk].updateCurrBeginSector();
                     //
                     MainClass.diskManage.release(currDisk);
-                    System.out.println("Beginning of new sector: " + MainClass.disks[currDisk].getCurrBeginSector());
+                    
+                    //System.out.println("Beginning of new sector: " + MainClass.disks[currDisk].getCurrBeginSector());
 
                 }
                 else if(line.startsWith(MainClass.PRINT_COMMAND)){
                     fName = line.substring(MainClass.PRINT_COMMAND.length()+1);
                     PrintJobThread currPThread = new PrintJobThread(fName);
                     currPThread.start();
-                    break;
+                    //SEE IF WE BREAK HERE:
+                    //break;
                 }
 
             }
@@ -289,7 +293,7 @@ class UserThread
 
         catch(Exception e){e.getMessage();}
         
-        //close input streams!
+        //close input streams********************!
     }
     public void userDataPrinter(int currDisk){
             System.out.println("Beginning sector before write: " + MainClass.disks[currDisk].getCurrBeginSector());
@@ -312,13 +316,20 @@ public class MainClass
 
     public static void main(String args[])
     {
-        initArrays(args);
+        //change to integers
+        String[] rmDash = new String[args.length];
+        for(int i = 0; i < args.length; i++){
+            rmDash[i] = args[i].substring(1);
+        }
+        
+        initArrays(rmDash);
         for (int i=0; i<args.length; ++i)
             System.out.println("Args[" + i + "] = " + args[i]);
 
         System.out.println("*** 141 OS Simulation ***");
         
-        initManagers(args);
+
+        initManagers(rmDash);
         
         startUserThreads(users);
     }
@@ -328,11 +339,11 @@ public class MainClass
         for(int i = 0; i < users.length; i++){
             users[i] = new UserThread(i);
         }
-        printers = new Printer[Integer.parseInt(args[1])];
+        printers = new Printer[Integer.parseInt(args[2])];
         for (int i = 0 ; i < printers.length; i++ ){
             printers[i] = new Printer(i); 
         }
-        disks = new Disk[Integer.parseInt(args[2])];
+        disks = new Disk[Integer.parseInt(args[1])];
         for (int i = 0 ; i < disks.length; i++){
             disks[i] = new Disk();
         }
